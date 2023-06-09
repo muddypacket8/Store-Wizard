@@ -1,8 +1,6 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.orm.exc import NoResultFound
-from hashlib import sha256
+from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
@@ -22,11 +20,13 @@ class User(Base):
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
 
+
 engine = create_engine('sqlite:///database/database.db')
 Base.metadata.create_all(bind=engine)
 
 Session = sessionmaker(bind=engine)
 session = Session()
+
 
 # Add a new user
 def add_user(username, password, email):
@@ -44,36 +44,46 @@ def add_user(username, password, email):
     except Exception as e:
         print("Error: ", str(e))
 
-# # Edit a user's email
-# def edit_user_email(user_id, new_email):
-#     try:
-#         user = session.query(User).get(user_id)
-#         if user:
-#             user.email = new_email
-#             session.commit()
-#             print("User email updated successfully.")
-#             print(user)  # Print the updated user
-#         else:
-#             print("User not found.")
-#     except Exception as e:
-#         print("Error: ", str(e))
 
-# # Delete a user
-# def delete_user(user_id):
-#     try:
-#         user = session.query(User).get(user_id)
-#         if user:
-#             session.delete(user)
-#             session.commit()
-#             print("User deleted successfully.")
-#             print(user)  # Print the deleted user
-#         else:
-#             print("User not found.")
-#     except Exception as e:
-#         print("Error: ", str(e))
+# Edit a user's email
+def edit_user_email(user_id, new_email):
+    try:
+        user = session.query(User).get(user_id)
+        if user:
+            user.email = new_email
+            session.commit()
+            print("User email updated successfully.")
+            print(user)  # Print the updated user
+        else:
+            print("User not found.")
+    except Exception as e:
+        print("Error: ", str(e))
 
 
-# # Example usage:
+# Delete a user
+def delete_user(user_id):
+    try:
+        user = session.query(User).get(user_id)
+        if user:
+            session.delete(user)
+            session.commit()
+            print("User deleted successfully.")
+            print(user)  # Print the deleted user
+        else:
+            print("User not found.")
+    except Exception as e:
+        print("Error: ", str(e))
+
+
+# Prompt user for user details
+username = input("Enter username: ")
+password = input("Enter password: ")
+email = input("Enter email: ")
+
+# Create new user
+add_user(username, password, email)
+
+# Example usage:
 # add_user("timothy", "press", "timon@gmail.com")
 # edit_user_email(1, "leonmwas@gmail.com")
 # delete_user(1)
