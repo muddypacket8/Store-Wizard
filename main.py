@@ -116,14 +116,23 @@ def print_report(session):
     # Fetch all sales
     sales = session.query(Sale).all()
 
-    print("-------- Product Report --------")
-    for product in products:
-        print(f"Product: {product.product} | Price: {product.price}")
+    product_report = []
+    sale_report = []
 
-    print("\n-------- Sales Report --------")
+    for product in products:
+        product_report.append({'product': product.product, 'price': product.price})
+
     for sale in sales:
         product = session.query(Product).get(sale.product_id)
-        print(f"Product: {product.product} | Quantity: {sale.quantity}")
+        sale_report.append({'product': product.product, 'quantity': sale.quantity})
+
+    print("-------- Product Report --------")
+    for product in product_report:
+        print(f"Product: {product['product']} | Price: {product['price']}")
+
+    print("\n-------- Sales Report --------")
+    for sale in sale_report:
+        print(f"Product: {sale['product']} | Quantity: {sale['quantity']}")
 
     print("\n-------- End of Reports --------")
 
@@ -141,7 +150,7 @@ def main():
         print("3. Enter Product")
         print("4. Enter Sale")
         print("5. Print Reports")
-        print("6. Exit")
+        print("7. Exit")
 
         choice = input("Enter your choice: ")
 
