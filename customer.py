@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, sessionmaker
+ffrom sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -10,12 +10,14 @@ class Product(Base):
     product = Column(String(100))
     price = Column(Integer)
 
-    def __init__(self, product, price):
+    def __init__(self, product_id, product, price):
+        self.product_id = product_id
         self.product = product
         self.price = price
 
     def __repr__(self):
-        return f"<Product(product='{self.product}', price={self.price})>"
+        return f"<Product(product_id={self.product_id}, product='{self.product}', price={self.price})>"
+
 
 class Sale(Base):
     __tablename__ = 'sales'
@@ -25,11 +27,12 @@ class Sale(Base):
 
     product = relationship("Product", backref="sales")
 
-    def __init__(self, quantity):
+    def __init__(self, product_id, quantity):
+        self.product_id = product_id
         self.quantity = quantity
 
     def __repr__(self):
-        return f"<Sale(id={self.id}, quantity={self.quantity})>"
+        return f"<Sale(id={self.id}, product_id={self.product_id}, quantity={self.quantity})>"
 
 
 # Create the engine and session
@@ -38,45 +41,41 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Create product instances
-product1 = Product(product="shrink", price=3245)
-product2 = Product(product="expand", price=2500)
-product3 = Product(product="cartridges", price=450)
+# Function to display product report
+def display_product_report():
+    print("PRODUCTS:")
+    for product in product_data:
+        print(f"Product ID: {product['product_id']}")
+        print(f"Product Name: {product['product']}")
+        print(f"Price: {product['price']}")
+        print("---")
 
-# Add products to the session and commit the changes
-session.add_all([product1, product2, product3])
-session.commit()
+# Function to display sale report
+def display_sale_report():
+    print("SALES:")
+    for sale in sale_data:
+        print(f"Sale ID: {sale['id']}")
+        print(f"Product ID: {sale['product_id']}")
+        print(f"Quantity: {sale['quantity']}")
+        print("---")
 
-# Retrieve the products from the database
+# Fetch all products
 products = session.query(Product).all()
 
-# Create sales instances
-sale1 = Sale(quantity=10)
-sale1.product = product1
+# Fetch all sales
+sales = session.query(Sale).all()
 
-sale2 = Sale(quantity=5)
-sale2.product = product2
+# Convert fetched data to dictionaries for easier access
+product_data = [product.__dict__ for product in products]
+sale_data = [sale.__dict__ for sale in sales]
 
-sale3 = Sale(quantity=14)
-sale3.product = product3
+# Prompt user for report type
+report_type = input("Enter 'product' for product report or 'sale' for sale report: ")
 
-# Add sales to the session and commit the changes
-session.add_all([sale1, sale2, sale3])
-session.commit()
-
-# Update a product
-# product_to_update = session.query(Product).filter_by(product="expand").first()
-# if product_to_update:
-#     product_to_update.price = 2000
-#     session.commit()
-
-# Delete a sale
-# sale_to_delete = session.query(Sale).filter_by(quantity=14).first()
-# if sale_to_delete:
-#     session.delete(sale_to_delete)
-#     session.commit()
-
-# Retrieve the updated products from the database
-# updated_products = session.query(Product).all()
-print(products)
-
+# Display the corresponding report
+if report_type == 'product':
+    display_product_report()
+elif report_type == 'sale':
+    display_sale_report()
+else:
+    print("Invalid report type.")
