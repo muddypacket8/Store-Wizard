@@ -18,7 +18,6 @@ class Product(Base):
     def __repr__(self):
         return f"<Product(product_id={self.product_id}, product='{self.product}', price={self.price})>"
 
-
 class Sale(Base):
     __tablename__ = 'sales'
     id = Column(Integer, primary_key=True)
@@ -41,10 +40,10 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Create product instances
-product1 = Product(1, "shrink", 3245)
-product2 = Product(5, "expand", 2500)
-product3 = Product(2, "catriges,", 450)
+# Create product instances with unique product_id values
+product1 = Product(4, "shrink", 3245)
+product2 = Product(2, "expand", 2500)
+product3 = Product(3, "cartridges", 450)
 
 # Add products to the session and commit the changes
 session.add_all([product1, product2, product3])

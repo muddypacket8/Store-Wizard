@@ -33,7 +33,9 @@ Usage
 After launching the application, you will be prompted to log in with your username and password.
 Once logged in, you can access the main menu, which provides options to manage products and sales.
 In the product management section, you can add new products, update existing product details such as price, and view the list of products.
+
 In the sale management section, you can create sale records by specifying the product ID and quantity. You can also view the list of sales.
+
 To exit the application, choose the appropriate option from the main menu.
 
 Contributing
