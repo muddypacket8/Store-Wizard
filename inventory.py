@@ -40,23 +40,34 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Create product instances with unique product_id values
-product1 = Product(4, "shrink", 3245)
-product2 = Product(2, "expand", 2500)
-product3 = Product(3, "cartridges", 450)
+# Function to prompt user for product details
+def enter_product():
+    product_id = int(input("Enter product ID: "))
+    product_name = input("Enter product name: ")
+    price = int(input("Enter product price: "))
 
-# Add products to the session and commit the changes
-session.add_all([product1, product2, product3])
-session.commit()
+    product = Product(product_id, product_name, price)
+    session.add(product)
+    session.commit()
+    print("Product added successfully.")
 
-# Retrieve the products from the database
-products = session.query(Product).all()
+# Function to prompt user for sale details
+def enter_sale():
+    product_id = int(input("Enter product ID: "))
+    quantity = int(input("Enter sale quantity: "))
 
-# Create sales instances
-sale1 = Sale(product_id=products[0].product_id, quantity=10)
-sale2 = Sale(product_id=products[1].product_id, quantity=5)
-sale3 = Sale(product_id=products[2].product_id, quantity=14)
+    sale = Sale(product_id, quantity)
+    session.add(sale)
+    session.commit()
+    print("Sale added successfully.")
 
-# Add sales to the session and commit the changes
-session.add_all([sale1, sale2, sale3])
-session.commit()
+# Prompt user for action
+action = input("Enter 'product' to enter a new product or 'sale' to enter a new sale: ")
+
+if action == 'product':
+    enter_product()
+elif action == 'sale':
+    enter_sale()
+else:
+    print("Invalid action. Please try again.")
+
