@@ -41,23 +41,32 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Fetch all products
-products = session.query(Product).all()
+# Function to generate products report
+def generate_products_report():
+    products = session.query(Product).all()
+    print("PRODUCTS:")
+    for product in products:
+        print(f"Product ID: {product.product_id}")
+        print(f"Product Name: {product.product}")
+        print(f"Price: {product.price}")
+        print("---")
 
-# Fetch all sales
-sales = session.query(Sale).all()
+# Function to generate sales report
+def generate_sales_report():
+    sales = session.query(Sale).all()
+    print("\nSALES:")
+    for sale in sales:
+        print(f"Sale ID: {sale.id}")
+        print(f"Product ID: {sale.product_id}")
+        print(f"Quantity: {sale.quantity}")
+        print("---")
 
-# Generate the report
-print("PRODUCTS:")
-for product in products:
-    print(f"Product ID: {product.product_id}")
-    print(f"Product Name: {product.product}")
-    print(f"Price: {product.price}")
-    print("---")
+# Prompt user for report type
+report_type = input("Enter 'products' to generate the products report or 'sales' to generate the sales report: ")
 
-print("\nSALES:")
-for sale in sales:
-    print(f"Sale ID: {sale.id}")
-    print(f"Product ID: {sale.product_id}")
-    print(f"Quantity: {sale.quantity}")
-    print("---")
+if report_type == 'products':
+    generate_products_report()
+elif report_type == 'sales':
+    generate_sales_report()
+else:
+    print("Invalid report type. Please try again.")
