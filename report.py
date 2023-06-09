@@ -36,7 +36,7 @@ class Sale(Base):
 
 
 # Create the engine and session
-engine = create_engine('sqlite:///database/inventory.db')
+engine = create_engine('sqlite:///database/database.db')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()

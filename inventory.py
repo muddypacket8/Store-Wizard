@@ -44,9 +44,10 @@ session = Session()
 # Create product instances
 product1 = Product(1, "shrink", 3245)
 product2 = Product(5, "expand", 2500)
+product3 = Product(2, "catriges,", 450)
 
 # Add products to the session and commit the changes
-session.add_all([product1, product2])
+session.add_all([product1, product2, product3])
 session.commit()
 
 # Retrieve the products from the database
@@ -55,7 +56,8 @@ products = session.query(Product).all()
 # Create sales instances
 sale1 = Sale(product_id=products[0].product_id, quantity=10)
 sale2 = Sale(product_id=products[1].product_id, quantity=5)
+sale3 = Sale(product_id=products[2].product_id, quantity=14)
 
 # Add sales to the session and commit the changes
-session.add_all([sale1, sale2])
+session.add_all([sale1, sale2, sale3])
 session.commit()
